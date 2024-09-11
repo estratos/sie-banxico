@@ -19,16 +19,18 @@
     }
   },
   "require-dev": {
-    "symfony/http-kernel": "^4.0",  
+    "symfony/http-kernel": "^4.0",   
     "squizlabs/php_codesniffer": "^3.10",
     "phpstan/phpstan": "^1.12",
     "sebastian/phpcpd": "^6.0",
     "phpunit/phpunit": "^9.6"
   },
   "require": {
+    "php": ">=8.1",
     "symfony/config": "^7.1",
     "symfony/dependency-injection": "^7.1",
-    "symfony/yaml": "^7.1"
+    "symfony/yaml": "^7.1",
+    "php-http/guzzle7-adapter": "^1.0"
   },
 
   "repositories": [
