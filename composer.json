@@ -30,12 +30,18 @@
     "symfony/config": "^7.1",
     "symfony/dependency-injection": "^7.1",
     "symfony/yaml": "^7.1",
-    "php-http/guzzle7-adapter": "^1.0"
+    "php-http/guzzle7-adapter": "^1.0",
+    "xint0/banxico-php": "^2.0"
   },
 
   "repositories": [
     {
         "type": "git",
         "url": "https://github.com/estratos/sie-banxico.git"
-    }]
+    }],
+  "config": {
+    "allow-plugins": {
+      "php-http/discovery": true
+    }
+  }
 }
