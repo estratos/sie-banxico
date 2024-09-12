@@ -6,10 +6,10 @@ Cliente Symfony 7.* para la API REST del Sistema de Información Económica (SIE
 
 ### Requisitos
 
-- PHP `7.4` o más reciente.
+- PHP `8.1` o más reciente.
 - Cliente HTTP conforme a [PSR-18], cualquiera de la [lista de clientes y adaptadores] de [php-http.org].
 
-### Install Using Cmposer / Utilizar Composer
+### Install Using C0mposer / Utilizar Composer
 
 Instalar con el adaptador para Guzzle 7 (instalado por default) por ejemplo:
 
@@ -41,18 +41,17 @@ use App\Service\RequestService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
 use Estratos\SieBanxico\SieBanxico;
 
 class BanxicoController extends AbstractController
 {
 
 
-///// helper route to get tipo
+///// helper route to return exchange rate
 #[Route('/banxico/tipo', name: 'app_banxico_api_tipo')]
 public function getBanxicoRate(): Response
 {
-    $token = '4271d3f522930eb7ff3d316c4896d0ad5287298ad543d63c37107e78cc0ee4c7';
+    $token = '4271d3f522930eb7ff3d316c4896d0ad5287298ad54363c37107e78cc0ee4c75';
     $res = $this->getExchange($token);
 
 
