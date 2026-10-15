@@ -83,4 +83,7 @@ bundles sin argumentos), `SieBanxicoExtension::load()` estaba vacío y
   `Configuration::NODE_TEST`. Eran código muerto: no representan una incompatibilidad
   real porque la configuración nunca llegó a leerse.
 
+Las notas de release de esta versión están en
+[`v0.2.0-release-notes.md`](v0.2.0-release-notes.md).
+
 [PSR-18]: https://www.php-fig.org/psr/psr-18/
