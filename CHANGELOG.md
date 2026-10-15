@@ -8,9 +8,17 @@ y este proyecto sigue [Semantic Versioning](https://semver.org/lang/es/).
 ## [Sin publicar]
 
 Candidato a `0.2.0`. Refactor de compatibilidad con PHP 8.1-8.4 y Symfony
-6.4/7.x/8.x. Se conserva la API pública de las versiones publicadas (`0.1.0` y
-`0.1.1`), por lo que se puede publicar como `0.2.0`; la API pública no cambia
-de forma incompatible.
+6.4/7.x/8.x. Se conserva la API pública realmente utilizable de las versiones
+publicadas (`0.1.0` y `0.1.1`): las clases y sus métodos, usadas como librería.
+
+El bundle **no se podía registrar** en ninguna versión publicada, así que la
+integración con el contenedor y la configuración YAML son nuevas. En `0.1.x`
+`SieBanxico::__construct(string $token)` exigía el token (el kernel instancia los
+bundles sin argumentos), `SieBanxicoExtension::load()` estaba vacío y
+`getConfigTreeBuilder()` usaba `new TreeBuilder()` sin argumentos, que en Symfony
+7.x lanza `ArgumentCountError`. Además el alias derivado de la clase
+(`sie_banxico`) nunca coincidió con el nodo raíz de la plantilla
+(`Estratos_how_to`), lo que habría lanzado `LogicException`.
 
 ### Añadido
 
@@ -21,8 +29,9 @@ de forma incompatible.
 - `SieBanxico::setToken()`, `SieBanxico::getToken()` y `SieBanxico::getFixExchangeRate()`
   (alias con la errata corregida de `getFixEchangeRate()`).
 - `SieBanxico::client()`, que crea el cliente de forma diferida.
-- Opciones de configuración `token` y `http_client`, y los servicios
-  `sie_banxico.client` y `Estratos\SieBanxico\SieBanxicoClient` cuando hay token.
+- Opciones de configuración `token` y `http_client` bajo el nodo
+  `estratos_sie_banxico`, y los servicios `sie_banxico.client` y
+  `Estratos\SieBanxico\SieBanxicoClient` cuando hay token.
 - `SieBanxicoClient::__construct()` con la firma del padre, para poder inyectar un
   cliente [PSR-18] propio.
 - Pruebas para el bundle, el cliente, la configuración y la extensión (PHPUnit 10/11).
@@ -35,10 +44,10 @@ de forma incompatible.
   eliminados en Symfony 7.0, por lo que el bundle no podía arrancar en Symfony 7+.
 - `SieBanxico::__construct(?string $token = null)`: el token es opcional para que el
   kernel pueda registrar el bundle con `new SieBanxico()` y configurarlo por YAML.
-- `SieBanxico::getContainerExtension()` devuelve la extensión con el alias histórico
-  `Estratos_how_to`. La implementación por defecto de Symfony lanza una
-  `LogicException` porque el alias esperado para la clase `SieBanxico` sería
-  `sie_banxico`.
+- `SieBanxico::getContainerExtension()` devuelve la extensión con el alias
+  `estratos_sie_banxico`. La implementación por defecto de Symfony lanza una
+  `LogicException` porque el alias que deriva del nombre de la clase `SieBanxico`
+  sería `sie_banxico`.
 - `ClientInit()` es idempotente y ya no es obligatorio antes de consultar un tipo de
   cambio.
 - `SieBanxicoExtension::load()` procesa y valida la configuración y devuelve `void`.
@@ -55,6 +64,10 @@ de forma incompatible.
 
 ### Eliminado
 
+- `Configuration::NODE_TEST` y el nodo `test_node`, junto con el nodo raíz
+  `Estratos_how_to`. Eran restos del andamiaje de la plantilla del bundle: la
+  extensión tenía `load()` vacío, así que esa configuración nunca se leyó y ningún
+  usuario pudo haberla usado. El nodo raíz pasa a `estratos_sie_banxico`.
 - `tests/App/AppKernel.php`, `tests/App/config.yml` y `tests/php-cs-fixer.config.php`.
   El kernel de pruebas apuntaba a una clase inexistente
   (`Estratos\SieBanxico\EstratosSieBanxico`) y la configuración de php-cs-fixer usaba
@@ -63,7 +76,11 @@ de forma incompatible.
 ### Compatibilidad
 
 - Se conservan las clases `SieBanxico` y `SieBanxicoClient`, el constructor con token,
-  `ClientInit()`, `getExchangeRate()`, `getFixEchangeRate()`, `getEuroExchangeRate()`,
-  las constantes públicas de configuración y el nodo `test_node`.
+  `ClientInit()`, `getExchangeRate()`, `getFixEchangeRate()` (con la errata),
+  `getEuroExchangeRate()` y la constante
+  `SieBanxicoClient::SERIES_EURO_EXCHANGE_RATE_DETERMINATION`.
+- Se eliminan `Configuration::ROOT_NAME` (valor anterior `Estratos_how_to`) y
+  `Configuration::NODE_TEST`. Eran código muerto: no representan una incompatibilidad
+  real porque la configuración nunca llegó a leerse.
 
 [PSR-18]: https://www.php-fig.org/psr/psr-18/

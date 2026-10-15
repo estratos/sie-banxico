@@ -40,12 +40,12 @@ return [
 Y define tu token:
 
 ```yaml
-# config/packages/estratos_how_to.yaml
-Estratos_how_to:
+# config/packages/estratos_sie_banxico.yaml
+estratos_sie_banxico:
     token: '%env(BANXICO_SIE_TOKEN)%'
 ```
 
-> El nodo raíz de configuración se llama `Estratos_how_to` por compatibilidad con las versiones `0.1.x`. Es un nombre no convencional a propósito: cambiarlo rompería la configuración de las aplicaciones existentes.
+El nodo raíz es `estratos_sie_banxico`, el alias convencional para la clase `Estratos\SieBanxico\SieBanxico`. El registro del bundle y la configuración por YAML son **nuevos** en esta versión: las versiones `0.1.x` sólo permitían usar las clases como librería (ver "Uso directo"), porque su extensión no leía configuración alguna.
 
 Con el token configurado, el bundle registra dos servicios:
 
@@ -57,7 +57,7 @@ Con el token configurado, el bundle registra dos servicios:
 Si tu proyecto tiene más de un cliente PSR-18, indica cuál debe usarse:
 
 ```yaml
-Estratos_how_to:
+estratos_sie_banxico:
     token: '%env(BANXICO_SIE_TOKEN)%'
     http_client: 'app.http_client'
 ```
@@ -161,17 +161,16 @@ La matriz completa de PHP y Symfony se ejecuta en GitHub Actions (`.github/workf
 
 ## Compatibilidad hacia atrás
 
-Se conserva la API pública de las versiones publicadas (`0.1.0` y `0.1.1`):
+Se conserva la API pública de las versiones publicadas (`0.1.0` y `0.1.1`), que era la única que se podía usar realmente:
 
 - Clases `Estratos\SieBanxico\SieBanxico` y `Estratos\SieBanxico\SieBanxicoClient` con sus nombres y métodos.
 - Constructor `new SieBanxico($token)` (el argumento ahora es opcional) y `ClientInit()`.
 - Métodos `getExchangeRate()`, `getFixEchangeRate()` (con la errata original) y `getEuroExchangeRate()`.
-- Constantes `Configuration::ROOT_NAME` (`Estratos_how_to`), `Configuration::NODE_TEST` y `SieBanxicoClient::SERIES_EURO_EXCHANGE_RATE_DETERMINATION`.
-- Nodo de configuración `test_node`, sin efecto, conservado para que las configuraciones existentes sigan siendo válidas.
+- Constante `SieBanxicoClient::SERIES_EURO_EXCHANGE_RATE_DETERMINATION`.
 
 Cambios que pueden requerir atención:
 
-- El alias de la extensión sigue siendo `Estratos_how_to`. Si prefieres el alias convencional `sie_banxico`, sobrescribe `SieBanxico::getContainerExtension()` en tu proyecto.
+- `Configuration::ROOT_NAME` pasa de `Estratos_how_to` a `estratos_sie_banxico` y se elimina `Configuration::NODE_TEST` junto con el nodo `test_node`. Eran restos del andamiaje de la plantilla: la extensión tenía `load()` vacío, así que la configuración nunca se leyó. Si tenías un bloque `Estratos_how_to:` en tu aplicación, puedes borrarlo (nunca tuvo efecto) y usar el nuevo si quieres registrar los servicios del bundle.
 - Las clases ahora declaran `declare(strict_types=1)` y tipos de retorno (`mixed`) en los métodos de consulta.
 - `tests/App/AppKernel.php` se eliminó: su única prueba se cubre con pruebas de la extensión y del contenedor.
 

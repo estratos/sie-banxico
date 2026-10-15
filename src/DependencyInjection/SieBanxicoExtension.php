@@ -13,10 +13,10 @@ use Symfony\Component\DependencyInjection\Reference;
 /**
  * Registers the bundle services.
  *
- * The extension alias is explicitly set to {@see Configuration::ROOT_NAME} so
- * it keeps matching the configured root node of previous releases. Symfony
- * derives the default alias from the class name (`sie_banxico`), which no
- * released version of this bundle ever used.
+ * The alias is set explicitly to {@see Configuration::ROOT_NAME}. Symfony's
+ * default alias is derived from the class name (`sie_banxico`), but the bundle
+ * class is `Estratos\SieBanxico\SieBanxico`, so the convention for this package
+ * is `estratos_sie_banxico`.
  */
 class SieBanxicoExtension extends Extension
 {

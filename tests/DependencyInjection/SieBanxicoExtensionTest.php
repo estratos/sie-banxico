@@ -78,8 +78,7 @@ final class SieBanxicoExtensionTest extends TestCase
     public function testConfigurationCanBeLoadedFromYaml(): void
     {
         $configFile = $this->writeConfigFile(<<<'YAML'
-            Estratos_how_to:
-                test_node: my_value
+            estratos_sie_banxico:
                 token: a-token
             YAML);
 
@@ -98,11 +97,10 @@ final class SieBanxicoExtensionTest extends TestCase
         }
     }
 
-    public function testLegacyConfigurationWithoutATokenIsStillAccepted(): void
+    public function testConfigurationWithoutATokenRegistersNothing(): void
     {
         $configFile = $this->writeConfigFile(<<<'YAML'
-            Estratos_how_to:
-                test_node: legacy_value
+            estratos_sie_banxico: ~
             YAML);
 
         try {
@@ -117,6 +115,17 @@ final class SieBanxicoExtensionTest extends TestCase
         } finally {
             @unlink($configFile);
         }
+    }
+
+    /**
+     * The scaffolding template shipped a `Estratos_how_to` root with an unused
+     * `test_node`; it was never read by the extension, so it is gone.
+     */
+    public function testTheRemovedScaffoldingConfigurationRootIsNotAccepted(): void
+    {
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
+
+        (new SieBanxicoExtension())->load([['test_node' => 'test_value']], new ContainerBuilder());
     }
 
     public function testUnknownOptionsAreRejected(): void

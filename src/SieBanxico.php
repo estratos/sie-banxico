@@ -20,10 +20,10 @@ use Xint0\BanxicoPHP\SieClient;
  *
  * The class name is kept for backwards compatibility. It is not conventional:
  * Symfony derives the expected extension alias from the class short name
- * (`SieBanxico` -> `sie_banxico`) while this bundle has always used
- * `Estratos_how_to` (see {@see Configuration::ROOT_NAME}), so
- * {@see self::getContainerExtension()} is overridden. Renaming the class or the
- * configuration root would break every application already using this bundle.
+ * (`SieBanxico` -> `sie_banxico`) while the configuration root is
+ * `estratos_sie_banxico` (see {@see Configuration::ROOT_NAME}), so
+ * {@see self::getContainerExtension()} is overridden. Renaming the class would
+ * break every application already using `new SieBanxico($token)`.
  */
 class SieBanxico extends Bundle
 {

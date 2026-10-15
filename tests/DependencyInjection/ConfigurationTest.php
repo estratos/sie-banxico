@@ -11,12 +11,12 @@ use Symfony\Component\Config\Definition\Processor;
 
 final class ConfigurationTest extends TestCase
 {
-    public function testConfigurationRootNameIsKeptForBackwardsCompatibility(): void
+    public function testConfigurationRootName(): void
     {
         $tree = (new Configuration())->getConfigTreeBuilder()->buildTree();
 
-        // The literal value matters: applications already use this config root.
-        self::assertSame('Estratos_how_to', Configuration::ROOT_NAME);
+        // The root is the conventional alias for Estratos\SieBanxico\SieBanxico.
+        self::assertSame('estratos_sie_banxico', Configuration::ROOT_NAME);
         self::assertSame(Configuration::ROOT_NAME, $tree->getName());
     }
 
@@ -27,6 +27,15 @@ final class ConfigurationTest extends TestCase
         $treeBuilder = (new Configuration())->getConfigTreeBuilder();
 
         self::assertSame(Configuration::ROOT_NAME, $treeBuilder->buildTree()->getName());
+    }
+
+    public function testOnlyTheDocumentedOptionsAreDefined(): void
+    {
+        $processed = (new Processor())->processConfiguration(new Configuration(), [[]]);
+
+        // Guards against re-adding the scaffolding `test_node` placeholder.
+        self::assertSame(['token', 'http_client'], array_keys($processed));
+        self::assertArrayNotHasKey('test_node', $processed);
     }
 
     /**
@@ -57,15 +66,6 @@ final class ConfigurationTest extends TestCase
             'empty configuration uses defaults' => [
                 [],
                 [
-                    Configuration::NODE_TEST => 'test_node_value',
-                    Configuration::NODE_TOKEN => null,
-                    Configuration::NODE_HTTP_CLIENT => null,
-                ],
-            ],
-            'the legacy test node is still accepted' => [
-                [Configuration::NODE_TEST => 'test_value'],
-                [
-                    Configuration::NODE_TEST => 'test_value',
                     Configuration::NODE_TOKEN => null,
                     Configuration::NODE_HTTP_CLIENT => null,
                 ],
@@ -73,7 +73,6 @@ final class ConfigurationTest extends TestCase
             'token and http client are read' => [
                 [Configuration::NODE_TOKEN => 'a-token', Configuration::NODE_HTTP_CLIENT => 'my.client'],
                 [
-                    Configuration::NODE_TEST => 'test_node_value',
                     Configuration::NODE_TOKEN => 'a-token',
                     Configuration::NODE_HTTP_CLIENT => 'my.client',
                 ],
@@ -81,7 +80,7 @@ final class ConfigurationTest extends TestCase
         ];
     }
 
-    public function testTokenAcceptsAnyScalarValue(): void
+    public function testTokenAcceptsScalarValues(): void
     {
         $processed = (new Processor())->processConfiguration(
             new Configuration(),
@@ -89,5 +88,12 @@ final class ConfigurationTest extends TestCase
         );
 
         self::assertSame('a-token', $processed[Configuration::NODE_TOKEN]);
+    }
+
+    public function testTheRemovedScaffoldingOptionIsRejected(): void
+    {
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
+
+        (new Processor())->processConfiguration(new Configuration(), [['test_node' => 'test_value']]);
     }
 }

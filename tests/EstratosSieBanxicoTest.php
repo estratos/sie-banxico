@@ -21,18 +21,19 @@ final class EstratosSieBanxicoTest extends TestCase
 
     /**
      * The bundle class is named `SieBanxico` for backwards compatibility, so
-     * Symfony would expect the alias `sie_banxico`; the extension has always
-     * used `Estratos_how_to`. The override in the bundle keeps them aligned,
-     * which is what makes `$bundle->getContainerExtension()` usable at all.
+     * Symfony derives the alias `sie_banxico`; the package convention (and the
+     * configuration root) is `estratos_sie_banxico`. The override in the bundle
+     * keeps the alias and the root node aligned, which is what makes
+     * `$bundle->getContainerExtension()` usable at all.
      */
     public function testExtensionAliasDeviatesFromTheNamingConventionOnPurpose(): void
     {
         $bundle = new SieBanxico();
-        $conventionalAlias = ContainerBuilder::underscore('SieBanxico');
+        $derivedFromClassName = ContainerBuilder::underscore('SieBanxico');
 
-        self::assertSame('sie_banxico', $conventionalAlias);
-        self::assertNotSame($conventionalAlias, $bundle->getContainerExtension()?->getAlias());
-        self::assertSame('Estratos_how_to', $bundle->getContainerExtension()?->getAlias());
+        self::assertSame('sie_banxico', $derivedFromClassName);
+        self::assertNotSame($derivedFromClassName, $bundle->getContainerExtension()?->getAlias());
+        self::assertSame('estratos_sie_banxico', $bundle->getContainerExtension()?->getAlias());
     }
 
     public function testGetContainerExtensionIsCached(): void
