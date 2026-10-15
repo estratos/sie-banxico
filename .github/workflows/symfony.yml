@@ -1,8 +1,3 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Symfony
 
 on:
@@ -15,33 +10,57 @@ permissions:
   contents: read
 
 jobs:
-  symfony-tests:
+  tests:
+    name: PHP ${{ matrix.php }} / Symfony ${{ matrix.symfony }}
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # `symfony/*: *` installs the latest supported version, which is what a
+        # user gets by default; the pinned entries guarantee the boundaries of
+        # the supported range keep working.
+        #
+        # PHP 8.1 cannot run Symfony 7.4 (requires >= 8.2) and Symfony 8.0
+        # requires PHP >= 8.4, so the matrix only pairs compatible versions.
+        include:
+          - php: '8.1'
+            symfony: '6.4.*'
+          - php: '8.2'
+            symfony: '*'
+          - php: '8.3'
+            symfony: '*'
+          - php: '8.4'
+            symfony: '*'
+          - php: '8.4'
+            symfony: '8.0.*'
+
     steps:
-    #  To automatically get bug fixes and new Php versions for shivammathur/setup-php,
-    # change this to (see https://github.com/shivammathur/setup-php#bookmark-versioning):
-    # uses: shivammathur/setup-php@v2
-    - uses: shivammathur/setup-php@2cb9b829437ee246e9b3cac53555a39208ca6d28
-      with:
-        php-version: '8.0'
-    - uses: actions/checkout@v4
-    - name: Copy .env.test.local
-      run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v3
-      with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
-    - name: Install Dependencies
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-    - name: Create Database
-      run: |
-        mkdir -p data
-        touch data/database.sqlite
-    - name: Execute tests (Unit and Feature tests) via PHPUnit
-      env:
-        DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
-      run: vendor/bin/phpunit
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: curl, json, mbstring
+          coverage: none
+          tools: composer:v2
+
+      - name: Install Composer dependencies
+        run: |
+          composer require --no-interaction --no-update --dev \
+            "symfony/config:${{ matrix.symfony }}" \
+            "symfony/dependency-injection:${{ matrix.symfony }}" \
+            "symfony/http-kernel:${{ matrix.symfony }}" \
+            "symfony/yaml:${{ matrix.symfony }}"
+          composer update --no-interaction --no-progress --prefer-dist
+
+      - name: Validate composer.json
+        run: composer validate --strict --no-check-publish
+
+      - name: Run test suite
+        run: vendor/bin/phpunit -c tests/phpunit.xml --no-coverage
+
+      - name: Run static analysis
+        if: matrix.symfony == '*'
+        run: vendor/bin/phpstan analyse -c tests/phpstan.neon --no-progress

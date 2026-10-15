@@ -1,4 +1,9 @@
+includes:
+    - ../vendor/phpstan/phpstan/conf/bleedingEdge.neon
+
 parameters:
-    ignoreErrors:
-    #https://github.com/keboola/php-component/issues/8
-    - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\).#'
+    level: 6
+    paths:
+        - ../src
+        - .
+    tmpDir: ../var/phpstan

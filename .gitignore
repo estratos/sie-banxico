@@ -42,8 +42,16 @@
 # Build data
 /build/
 
+# Test and static analysis artifacts
+/tests/.phpunit.cache/
+/var/
+/.compat/
+
 # Composer PHAR
 /composer.phar
+
+# Library: not committed so the CI matrix can resolve each PHP/Symfony pair
+/composer.lock
 
 # Backup entities generated with doctrine:generate:entities command
 **/Entity/*~
