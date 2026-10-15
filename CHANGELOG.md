@@ -5,10 +5,12 @@ Todos los cambios relevantes de este proyecto se documentan en este archivo.
 El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/)
 y este proyecto sigue [Semantic Versioning](https://semver.org/lang/es/).
 
-## [3.0.0] - Sin publicar
+## [Sin publicar]
 
-Refactor de compatibilidad con PHP 8.1-8.4 y Symfony 6.4/7.x/8.x. La API pública
-de las versiones 1.x y 2.x se conserva.
+Candidato a `0.2.0`. Refactor de compatibilidad con PHP 8.1-8.4 y Symfony
+6.4/7.x/8.x. Se conserva la API pública de las versiones publicadas (`0.1.0` y
+`0.1.1`), por lo que se puede publicar como `0.2.0`; la API pública no cambia
+de forma incompatible.
 
 ### Añadido
 
@@ -47,6 +49,8 @@ de las versiones 1.x y 2.x se conserva.
   retiró `sebastian/phpcpd` y `squizlabs/php_codesniffer` (sin uso).
 - `php-http/guzzle7-adapter` pasa de `require` a `require-dev` + `suggest`: el paquete
   sólo necesita una implementación [PSR-18], que puede aportar la aplicación.
+- `extra.branch-alias` pasa de `3.0-dev` a `0.2-dev`, para que coincida con la
+  numeración real del paquete (`0.1.x`).
 - `tests/phpunit.xml` se migró al esquema moderno (PHPUnit 10/11).
 
 ### Eliminado

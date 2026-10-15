@@ -45,7 +45,7 @@ Estratos_how_to:
     token: '%env(BANXICO_SIE_TOKEN)%'
 ```
 
-> El nodo raíz de configuración se llama `Estratos_how_to` por compatibilidad con las versiones 1.x y 2.x. Es un nombre no convencional a propósito: cambiarlo rompería la configuración de las aplicaciones existentes.
+> El nodo raíz de configuración se llama `Estratos_how_to` por compatibilidad con las versiones `0.1.x`. Es un nombre no convencional a propósito: cambiarlo rompería la configuración de las aplicaciones existentes.
 
 Con el token configurado, el bundle registra dos servicios:
 
@@ -97,7 +97,7 @@ class BanxicoController
 
 ### Uso directo (compatible con versiones anteriores)
 
-El flujo de las versiones 1.x y 2.x sigue funcionando sin cambios:
+El flujo de las versiones `0.1.x` sigue funcionando sin cambios:
 
 ```php
 use Estratos\SieBanxico\SieBanxico;
@@ -161,7 +161,7 @@ La matriz completa de PHP y Symfony se ejecuta en GitHub Actions (`.github/workf
 
 ## Compatibilidad hacia atrás
 
-Se conserva la API pública de las versiones 1.x y 2.x:
+Se conserva la API pública de las versiones publicadas (`0.1.0` y `0.1.1`):
 
 - Clases `Estratos\SieBanxico\SieBanxico` y `Estratos\SieBanxico\SieBanxicoClient` con sus nombres y métodos.
 - Constructor `new SieBanxico($token)` (el argumento ahora es opcional) y `ClientInit()`.

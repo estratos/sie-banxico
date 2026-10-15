@@ -11,7 +11,8 @@ use Estratos\SieBanxico\Tests\Compat\StubResponse;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Guards the 1.x/2.x public API of the bundle class: users instantiate it with
+ * Guards the public API of the published releases (0.1.0 and 0.1.1) of the
+ * bundle class: users instantiate it with
  * a token, optionally call ClientInit() and then call the exchange rate
  * helpers.
  */

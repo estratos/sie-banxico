@@ -13,11 +13,10 @@ use Xint0\BanxicoPHP\SieClient;
 /**
  * Symfony bundle for the Banco de Mexico (Banxico) SIE REST API.
  *
- * The class keeps the constructor signature that older versions of this bundle
- * exposed (`new SieBanxico($token)`), so existing applications keep working
- * without changes. Because `Bundle` gained typed properties and dropped its
- * constructor in modern Symfony versions, this class does not call
- * `parent::__construct()`.
+ * The class keeps the constructor signature exposed by the published versions
+ * (`new SieBanxico($token)`), so existing applications keep working without
+ * changes. Because `Bundle` gained typed properties and dropped its constructor
+ * in modern Symfony versions, this class does not call `parent::__construct()`.
  *
  * The class name is kept for backwards compatibility. It is not conventional:
  * Symfony derives the expected extension alias from the class short name

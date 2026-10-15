@@ -11,8 +11,8 @@ use Xint0\BanxicoPHP\SieClient;
  * SIE client with the extra Banxico series this bundle exposes.
  *
  * The class name, the inherited constructor signature and the
- * `exchangeRateEuroDetermination()` method are part of the public API of
- * versions 1.x/2.x and must keep working as-is.
+ * `exchangeRateEuroDetermination()` method are part of the public API released in
+ * 0.1.0 and 0.1.1 and must keep working as-is.
  */
 class SieBanxicoClient extends SieClient
 {
